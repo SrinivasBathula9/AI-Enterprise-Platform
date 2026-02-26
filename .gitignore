@@ -16,6 +16,9 @@ build/
 .env
 .env.local
 .env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
 
 # Node
 node_modules/
@@ -37,3 +40,6 @@ Thumbs.db
 
 # Alembic
 backend/alembic/versions/*.pyc
+
+# Project Specific
+docs/ai-enterprise-roadmap.md
