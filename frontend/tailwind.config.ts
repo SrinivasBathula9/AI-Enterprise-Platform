@@ -6,30 +6,36 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Geist Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"Geist Mono"', 'monospace'],
       },
       colors: {
         brand: {
-          50:  '#f0f4ff',
-          100: '#dce6fe',
-          200: '#b9cdfd',
-          300: '#8aabfb',
-          400: '#5680f7',
-          500: '#3b5bf0',
-          600: '#2a3de5',
-          700: '#2330ca',
-          800: '#232da4',
-          900: '#232c81',
-          950: '#161b50',
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
+          950: '#080414',
+        },
+        accent: {
+          400: '#86bf82',
+          500: '#699666',
+          600: '#4d704b',
         },
       },
       backdropBlur: {
         xs: '2px',
       },
       animation: {
-        'fade-in': 'fadeIn 0.2s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'pulse-dot': 'pulseDot 1.4s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        'pulse-dot': 'pulseDot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         fadeIn: {
@@ -37,12 +43,12 @@ export default {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         pulseDot: {
-          '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0.5' },
-          '40%': { transform: 'scale(1)', opacity: '1' },
+          '0%, 100%': { transform: 'scale(0.8)', opacity: '0.3' },
+          '50%': { transform: 'scale(1.2)', opacity: '1' },
         },
       },
     },

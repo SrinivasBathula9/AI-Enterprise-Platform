@@ -1,16 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Bot } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Bot, Home } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
+import { useAuth } from '@/hooks/useAuth'
 
 export function AuthPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [mode, setMode] = useState<'login' | 'register'>('login')
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+
+  const navigate = useNavigate()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user && mode === 'login') {
+      navigate('/chat', { replace: true })
+    }
+  }, [user, mode, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,73 +33,122 @@ export function AuthPage() {
       if (mode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
-      } else {
+      } else if (mode === 'register') {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
         setMessage('Check your email to confirm your account.')
+      } else if (mode === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/update-password`,
+        })
+        if (error) throw error
+        setMessage('Password reset instructions sent. Please check your email.')
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Authentication failed')
     } finally {
-      setLoading(false)
+      if (mode !== 'login' || !user) {
+        setLoading(false)
+      }
     }
   }
 
+  const getTitle = () => {
+    if (mode === 'login') return 'Sign in to your account'
+    if (mode === 'register') return 'Create a new account'
+    return 'Reset your password'
+  }
+
+  const getSubmitLabel = () => {
+    if (mode === 'login') return 'Sign In'
+    if (mode === 'register') return 'Create Account'
+    return 'Send Reset Link'
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-950 via-gray-950 to-black">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-gray-50 to-gray-100 dark:from-brand-900/20 dark:via-gray-950 dark:to-black bg-dot-grid transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md glass-panel border border-white/10 rounded-3xl p-8"
+        className="w-full max-w-md glass-panel border border-black/5 dark:border-white/10 rounded-3xl p-8 glow-purple relative"
       >
+        <button
+          onClick={() => navigate('/')}
+          className="absolute top-6 left-6 text-gray-400 hover:text-gray-900 dark:text-white/40 dark:hover:text-white transition-colors"
+        >
+          <Home size={20} />
+        </button>
+
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-brand-600/30 flex items-center justify-center mb-4">
-            <Bot size={28} className="text-brand-400" />
+          <div className="w-14 h-14 rounded-2xl bg-brand-500/10 dark:bg-brand-500/20 flex items-center justify-center mb-4 glow-purple">
+            <Bot size={28} className="text-brand-600 dark:text-brand-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white">AI Enterprise Platform</h1>
-          <p className="text-sm text-white/40 mt-1">
-            {mode === 'login' ? 'Sign in to your account' : 'Create a new account'}
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Enterprise Platform</h1>
+          <p className="text-sm text-gray-500 dark:text-white/40 mt-1">{getTitle()}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-white/60 mb-1">Email</label>
+            <label className="block text-sm text-gray-700 dark:text-white/60 mb-1">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors"
+              className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors shadow-sm dark:shadow-none"
               placeholder="you@company.com"
             />
           </div>
-          <div>
-            <label className="block text-sm text-white/60 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors"
-              placeholder="••••••••"
-            />
-          </div>
 
-          {error && <p className="text-sm text-red-400 bg-red-500/10 rounded-lg px-3 py-2">{error}</p>}
-          {message && <p className="text-sm text-emerald-400 bg-emerald-500/10 rounded-lg px-3 py-2">{message}</p>}
+          {mode !== 'forgot' && (
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-sm text-gray-700 dark:text-white/60">Password</label>
+                {mode === 'login' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('forgot')
+                      setError('')
+                      setMessage('')
+                    }}
+                    className="text-xs text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+                  >
+                    Forgot Password?
+                  </button>
+                )}
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors shadow-sm dark:shadow-none"
+                placeholder="••••••••"
+              />
+            </div>
+          )}
+
+          {error && <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-lg px-3 py-2 border border-red-100 dark:border-transparent">{error}</p>}
+          {message && <p className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg px-3 py-2 border border-emerald-100 dark:border-transparent">{message}</p>}
 
           <Button type="submit" className="w-full" loading={loading}>
-            {mode === 'login' ? 'Sign In' : 'Create Account'}
+            {getSubmitLabel()}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-white/30 mt-6">
-          {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
+        <p className="text-center text-sm text-gray-500 dark:text-white/30 mt-6">
+          {mode === 'login' ? "Don't have an account? " : ''}
+          {mode === 'register' ? 'Already have an account? ' : ''}
+          {mode === 'forgot' ? 'Remember your password? ' : ''}
           <button
-            onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-            className="text-brand-400 hover:text-brand-300 transition-colors"
+            onClick={() => {
+              setMode(mode === 'login' ? 'register' : 'login')
+              setError('')
+              setMessage('')
+            }}
+            className="text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 font-medium transition-colors"
           >
             {mode === 'login' ? 'Sign Up' : 'Sign In'}
           </button>

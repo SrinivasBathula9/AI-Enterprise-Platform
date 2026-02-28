@@ -52,9 +52,9 @@ export function Header() {
   }
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-30 flex h-14 items-center gap-3 glass-panel border-b border-white/10 px-4">
+    <header className="fixed top-0 right-0 left-0 z-30 flex h-14 items-center gap-3 glass-panel border-b border-black/5 dark:border-white/10 px-4 transition-colors">
       {!sidebarOpen && (
-        <button onClick={toggleSidebar} className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors">
+        <button onClick={toggleSidebar} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">
           <Menu size={18} />
         </button>
       )}
@@ -67,7 +67,7 @@ export function Header() {
         <select
           value={selectedProvider}
           onChange={(e) => handleProviderChange(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white/80 focus:outline-none focus:border-brand-500"
+          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white/80 focus:outline-none focus:border-brand-500 shadow-sm dark:shadow-none transition-colors"
         >
           {PROVIDERS.map((p) => (
             <option key={p.value} value={p.value}>
@@ -78,7 +78,7 @@ export function Header() {
         <select
           value={selectedModel}
           onChange={(e) => setModel(e.target.value)}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white/80 focus:outline-none focus:border-brand-500"
+          className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white/80 focus:outline-none focus:border-brand-500 shadow-sm dark:shadow-none transition-colors"
         >
           {currentProvider.models.map((m) => (
             <option key={m.value} value={m.value}>
@@ -90,7 +90,7 @@ export function Header() {
 
       <button
         onClick={toggleTheme}
-        className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+        className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors"
       >
         {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
       </button>

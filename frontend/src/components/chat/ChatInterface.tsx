@@ -35,12 +35,12 @@ export function ChatInterface() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center justify-center h-full gap-4 text-center py-20"
           >
-            <div className="w-16 h-16 rounded-2xl bg-brand-600/20 flex items-center justify-center">
-              <Bot size={32} className="text-brand-400" />
+            <div className="w-16 h-16 rounded-2xl bg-brand-100 dark:bg-brand-600/20 flex items-center justify-center">
+              <Bot size={32} className="text-brand-600 dark:text-brand-400" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-white mb-1">How can I help you?</h2>
-              <p className="text-sm text-white/40">Start a conversation or pick an assistant from Discover.</p>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">How can I help you?</h2>
+              <p className="text-sm text-gray-500 dark:text-white/40">Start a conversation or pick an assistant from Discover.</p>
             </div>
           </motion.div>
         )}

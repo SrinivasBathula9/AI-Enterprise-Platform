@@ -21,19 +21,17 @@ export function MessageBubble({ message }: Props) {
       className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
     >
       <div
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
-          isUser ? 'bg-brand-600/30 text-brand-300' : 'bg-white/10 text-white/70'
-        }`}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${isUser ? 'bg-brand-100 text-brand-700 dark:bg-brand-600/30 dark:text-brand-300' : 'bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-white/70'
+          }`}
       >
         {isUser ? <User size={15} /> : <Bot size={15} />}
       </div>
 
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-          isUser
-            ? 'bg-brand-600/25 text-white rounded-tr-sm'
-            : 'glass-message text-white/90 rounded-tl-sm'
-        }`}
+        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${isUser
+            ? 'bg-brand-50 text-gray-900 dark:bg-brand-600/25 dark:text-white rounded-tr-sm'
+            : 'glass-message text-gray-900 dark:text-white/90 rounded-tl-sm'
+          }`}
       >
         {isUser ? (
           <p className="whitespace-pre-wrap">{message.content}</p>
@@ -54,7 +52,7 @@ export function MessageBubble({ message }: Props) {
                     {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
                 ) : (
-                  <code className="bg-white/10 rounded px-1 py-0.5 text-xs font-mono" {...props}>
+                  <code className="bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white rounded px-1 py-0.5 text-xs font-mono" {...props}>
                     {children}
                   </code>
                 )
@@ -62,7 +60,7 @@ export function MessageBubble({ message }: Props) {
               p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
               ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
               ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
-              strong: ({ children }) => <strong className="text-white font-semibold">{children}</strong>,
+              strong: ({ children }) => <strong className="text-gray-900 dark:text-white font-semibold">{children}</strong>,
             }}
           >
             {message.content}

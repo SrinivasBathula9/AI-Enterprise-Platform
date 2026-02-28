@@ -1,11 +1,19 @@
+@import url('https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css');
+@import url('https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-mono/style.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.05);
   }
 
   html {
@@ -15,7 +23,7 @@
   }
 
   body {
-    @apply bg-gray-950 text-white;
+    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-white;
     overflow-x: hidden;
   }
 
@@ -23,14 +31,17 @@
   ::-webkit-scrollbar {
     width: 4px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full;
+    @apply bg-black/10 dark:bg-white/10 rounded-full;
   }
+
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-white/20;
+    @apply bg-black/20 dark:bg-white/20;
   }
 }
 
@@ -42,7 +53,7 @@
   }
 
   .glass-message {
-    background: rgba(255, 255, 255, 0.05);
+    @apply bg-gray-50/80 dark:bg-white/5;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
@@ -50,6 +61,27 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-brand-200;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-brand-400 dark:from-brand-400 dark:to-brand-200;
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .dark .bg-dot-grid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.15), inset 0 0 20px -10px rgba(139, 92, 246, 0.1);
+  }
+
+  .dark .glow-purple {
+    box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.2), inset 0 0 20px -10px rgba(139, 92, 246, 0.1);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 30px -5px rgba(105, 150, 102, 0.3);
   }
 }

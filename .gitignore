@@ -43,3 +43,7 @@ backend/alembic/versions/*.pyc
 
 # Project Specific
 docs/ai-enterprise-roadmap.md
+
+#Documentation
+Docs/*
+docs/*

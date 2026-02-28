@@ -233,7 +233,7 @@ cp .env.example .env
 ```bash
 cd backend
 pip install -r requirements.txt
-python -m app.main
+uvicorn app.main:app --reload
 ```
 
 ### Step 3: Frontend Installation
