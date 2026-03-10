@@ -10,7 +10,7 @@ from app.config import get_settings
 from app.middleware.rate_limit import limiter
 from app.models.assistant import Assistant
 from app.models.workspace import Workspace
-from app.routers import assistants, chat, documents, health, messages
+from app.routers import assistants, chat, documents, explore_agents, health, messages
 from app.routers.auth import router as auth_router
 from app.services.qdrant_service import ensure_collections, get_qdrant_client
 
@@ -51,6 +51,86 @@ DEFAULT_ASSISTANTS = [
         ),
         "graph_type": "copywriter",
         "icon": "pen-line",
+    },
+    # ── Operational AI Agents — E-Commerce Fashion Brand ──────────────────────
+    {
+        "name": "AI Logistics Monitor",
+        "description": (
+            "Monitors Shopify orders, detects held and delayed shipments, tracks fulfillment "
+            "partner status, checks courier account balances, flags shipping cost anomalies, "
+            "and generates daily and weekly logistics reports."
+        ),
+        "system_prompt": (
+            "You are an AI Logistics Operations Monitor for an international e-commerce fashion brand. "
+            "You have access to Shopify orders, fulfillment partner shipment tracking, courier account "
+            "balances, and shipping cost analysis. Detect anomalies, surface held shipments, flag cost "
+            "spikes, and generate clear operational reports. Always cite data sources and timestamps."
+        ),
+        "graph_type": "logistics_monitor",
+        "icon": "truck",
+    },
+    {
+        "name": "AI Finance Monitor",
+        "description": (
+            "Extracts invoice data from email, tracks expenses, detects unusual spending anomalies "
+            "against historical baselines, monitors cash flow position, and generates weekly finance summaries."
+        ),
+        "system_prompt": (
+            "You are an AI Finance Monitor for an international e-commerce fashion brand. "
+            "Help automate finance tracking by extracting invoices from email, recording expenses, "
+            "detecting spending anomalies vs. baseline, and generating weekly finance digest reports. "
+            "Be precise with numbers and always include currency and period context."
+        ),
+        "graph_type": "finance_monitor",
+        "icon": "bar-chart-2",
+    },
+    {
+        "name": "AI Email Manager",
+        "description": (
+            "Monitors the inbox, categorises and priority-ranks messages, highlights urgent operational "
+            "issues, identifies invoices, logistics updates, and supplier communications, and generates "
+            "a categorised inbox digest."
+        ),
+        "system_prompt": (
+            "You are an AI Email Manager for an international e-commerce fashion brand. "
+            "Monitor the inbox, classify emails into operational categories (invoice, logistics, supplier, "
+            "complaint, marketing), priority-rank them 1–5, and surface messages requiring urgent attention. "
+            "Generate concise, categorised inbox digests."
+        ),
+        "graph_type": "email_manager",
+        "icon": "mail",
+    },
+    {
+        "name": "AI Customer Issue Monitor",
+        "description": (
+            "Monitors customer support channels, identifies shipping complaints, lost parcel reports, "
+            "and refund requests, flags urgent issues with SLA targets, detects refund patterns by SKU "
+            "and courier, and generates daily CX team briefings."
+        ),
+        "system_prompt": (
+            "You are an AI Customer Issue Monitor for an international e-commerce fashion brand. "
+            "Triage support tickets, classify issue types (lost parcel, refund, wrong item, delay), "
+            "assign urgency levels with SLA targets, detect refund patterns, and generate daily "
+            "CX team briefings. Lead with urgency — surface the most critical issues first."
+        ),
+        "graph_type": "customer_issue_monitor",
+        "icon": "headphones",
+    },
+    {
+        "name": "AI Operations Dashboard",
+        "description": (
+            "Generates comprehensive daily operations summaries and weekly founder reports by aggregating "
+            "data across logistics, finance, and customer experience. Delivers reports via Slack webhooks "
+            "and email. The master operational intelligence hub."
+        ),
+        "system_prompt": (
+            "You are an AI Operations Dashboard agent for an international e-commerce fashion brand. "
+            "Synthesise data from logistics, finance, and customer experience into unified executive reports. "
+            "Generate daily ops summaries and weekly founder reports. Deliver via Slack and email. "
+            "Be executive-level concise — lead every report with a 3–5 bullet executive summary."
+        ),
+        "graph_type": "operations_dashboard",
+        "icon": "layout-dashboard",
     },
 ]
 
@@ -120,3 +200,4 @@ app.include_router(chat.router, prefix="/api/v1")
 app.include_router(messages.router, prefix="/api/v1")
 app.include_router(assistants.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
+app.include_router(explore_agents.router, prefix="/api/v1")
