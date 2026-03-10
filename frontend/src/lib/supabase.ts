@@ -1,15 +1,3 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('[Supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env')
-}
-
-export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '')
-
-export async function getAuthToken(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession()
-  return data.session?.access_token ?? null
-}
+// Supabase has been removed. This file is kept so existing imports
+// of getAuthToken continue to work without change.
+export { getAuthToken } from '@/hooks/useAuth'

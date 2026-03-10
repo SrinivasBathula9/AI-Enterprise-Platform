@@ -19,7 +19,7 @@ export function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-white">{user?.email}</p>
-                <p className="text-xs text-white/40">Supabase Auth</p>
+                <p className="text-xs text-white/40">Local Auth</p>
               </div>
               <Button variant="danger" size="sm" onClick={signOut}>
                 Sign Out

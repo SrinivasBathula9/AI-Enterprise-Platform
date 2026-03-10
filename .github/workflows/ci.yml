@@ -47,7 +47,7 @@ jobs:
       DATABASE_URL: postgresql+asyncpg://test_user:test_pass@localhost:5432/test_db
       REDIS_URL: redis://localhost:6379/0
       QDRANT_URL: http://localhost:6333
-      SUPABASE_JWT_SECRET: test-secret-for-ci
+      JWT_SECRET: test-secret-for-ci-at-least-32-chars-long
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
@@ -78,5 +78,4 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_SUPABASE_URL: https://placeholder.supabase.co
-          VITE_SUPABASE_ANON_KEY: placeholder-key
+          VITE_API_BASE_URL: http://localhost:8000

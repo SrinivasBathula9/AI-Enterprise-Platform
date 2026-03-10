@@ -12,12 +12,16 @@ langgraph
 langchain-core
 langchain-openai
 langchain-anthropic
+langchain-community
 langchain-huggingface
+ddgs
+httpx
 sentence-transformers
 unstructured
 python-multipart
 slowapi
 fastembed
 python-jose[cryptography]
+passlib[argon2]
 python-dotenv
 langchain-ollama

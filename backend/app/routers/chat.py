@@ -119,16 +119,7 @@ async def chat_stream(
 
     provider = body.provider or session.provider
     model = body.model or session.model
-    
-    # Cost Optimizer: Use open-source for general queries (short greetings or questions)
-    is_general = len(body.content.split()) < 3 or body.content.lower().strip() in ["hi", "hello", "hi!", "how are you?", "help"]
-    if is_general:
-        # For general queries, we strongly prefer the local powerhouse llama3.1:8b
-        if provider != "ollama" or model != "llama3.1:8b":
-            print(f"Cost Optimizer: Routing general query '{body.content}' to llama3.1:8b")
-            provider = "ollama"
-            model = "llama3.1:8b"
-        
+
     graph_type = assistant.graph_type if assistant else "chat"
     system_prompt = assistant.system_prompt if assistant else ""
 

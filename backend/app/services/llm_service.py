@@ -4,7 +4,7 @@ from typing import Literal
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
+from langchain_ollama import ChatOllama  # kept for Ollama provider support
 
 from app.config import get_settings
 
@@ -53,17 +53,9 @@ def get_llm(
         else:
             raise ValueError(f"Unknown LLM provider: {p}")
 
-    # Create the primary LLM
-    primary_llm = _create_llm(provider, model)
-
-    # If it's a paid provider, add a fallback chain
-    if provider in ["anthropic", "openai"]:
-        # Primary fallback: llama3.1:8b on Ollama
-        fallback_llm_1 = ChatOllama(
-            model="llama3.1:8b",
-            base_url=settings.ollama_base_url,
-            temperature=temperature,
-        )
-        return primary_llm.with_fallbacks([fallback_llm_1])
-
-    return primary_llm
+    # Return the primary LLM directly.
+    # NOTE: Do NOT wrap with .with_fallbacks(ollama) here — the Ollama fallback
+    # strips the .bind_tools() bindings applied by the agent layer, which causes
+    # tool calls (web_search, etc.) to silently vanish for any query that
+    # triggers the fallback path.
+    return _create_llm(provider, model)

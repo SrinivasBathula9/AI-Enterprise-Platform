@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Bot, Home } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { authService } from '@/services/authService'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -15,7 +15,7 @@ export function AuthPage() {
   const [error, setError] = useState('')
 
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, setAuth } = useAuth()
 
   useEffect(() => {
     if (user && mode === 'login') {
@@ -31,25 +31,22 @@ export function AuthPage() {
 
     try {
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
+        const { access_token } = await authService.login(email, password)
+        const userInfo = await authService.me(access_token)
+        setAuth(userInfo, access_token)
+        // navigation handled by the useEffect above
       } else if (mode === 'register') {
-        const { error } = await supabase.auth.signUp({ email, password })
-        if (error) throw error
-        setMessage('Check your email to confirm your account.')
+        await authService.register(email, password)
+        setMessage('Account created! You can now sign in.')
+        setMode('login')
       } else if (mode === 'forgot') {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/update-password`,
-        })
-        if (error) throw error
-        setMessage('Password reset instructions sent. Please check your email.')
+        await authService.forgotPassword(email)
+        setMessage('If that email exists, a reset link has been sent.')
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Authentication failed')
     } finally {
-      if (mode !== 'login' || !user) {
-        setLoading(false)
-      }
+      setLoading(false)
     }
   }
 
@@ -123,7 +120,7 @@ export function AuthPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
                 className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors shadow-sm dark:shadow-none"
                 placeholder="••••••••"
               />

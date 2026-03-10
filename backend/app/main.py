@@ -11,6 +11,7 @@ from app.middleware.rate_limit import limiter
 from app.models.assistant import Assistant
 from app.models.workspace import Workspace
 from app.routers import assistants, chat, documents, health, messages
+from app.routers.auth import router as auth_router
 from app.services.qdrant_service import ensure_collections, get_qdrant_client
 
 settings = get_settings()
@@ -114,6 +115,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
+app.include_router(auth_router)
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(messages.router, prefix="/api/v1")
 app.include_router(assistants.router, prefix="/api/v1")

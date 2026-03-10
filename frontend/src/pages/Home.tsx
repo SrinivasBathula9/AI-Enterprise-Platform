@@ -84,7 +84,7 @@ export function Home() {
                         </div>
                         <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Enterprise Security</h3>
                         <p className="text-gray-500 dark:text-white/40 leading-relaxed text-sm font-medium">
-                            Production-grade JWT validation via Supabase JWKS. Complete data segregation with isolated RAG vectors and execution environments.
+                            Production-grade JWT authentication with Argon2id password hashing. Complete data segregation with isolated RAG vectors and execution environments.
                         </p>
                     </div>
                 </motion.div>

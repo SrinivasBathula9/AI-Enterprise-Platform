@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Bot, Home } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { authService } from '@/services/authService'
 import { Button } from '@/components/ui/Button'
 
 export function UpdatePasswordPage() {
@@ -13,6 +13,8 @@ export function UpdatePasswordPage() {
     const [error, setError] = useState('')
 
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get('token') ?? ''
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -21,19 +23,19 @@ export function UpdatePasswordPage() {
             setError('Passwords do not match')
             return
         }
+        if (!token) {
+            setError('Missing reset token. Please use the link from your email.')
+            return
+        }
 
         setLoading(true)
         setError('')
         setMessage('')
 
         try {
-            const { error } = await supabase.auth.updateUser({ password })
-            if (error) throw error
-
+            await authService.resetPassword(token, password)
             setMessage('Password updated successfully! Redirecting...')
-            setTimeout(() => {
-                navigate('/login')
-            }, 2000)
+            setTimeout(() => navigate('/login'), 2000)
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : 'Failed to update password')
         } finally {
@@ -73,7 +75,7 @@ export function UpdatePasswordPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            minLength={6}
+                            minLength={8}
                             className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors shadow-sm dark:shadow-none"
                             placeholder="••••••••"
                         />
@@ -85,7 +87,7 @@ export function UpdatePasswordPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
-                            minLength={6}
+                            minLength={8}
                             className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors shadow-sm dark:shadow-none"
                             placeholder="••••••••"
                         />
